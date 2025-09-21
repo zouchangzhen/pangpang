@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多行费用计算器（手机适配版）</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .row-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-bottom: 10px;
+        }
+       
+       .formula-container {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 为输入框之间添加间距 */
+            margin-bottom: 10px;
+        }
+        
+        .weightClass {
+           /* width: 60px;  调整宽度，根据实际情况调整大小 */
+        }
+        
+        /* 可以为其他输入框也设置固定宽度，或者保持自适应 */
+        .costClass {
+           /* width: 48px;  示例设置，也可以保持默认宽度 */
+        }
+        
+        /* 可选：为输入框统一设置样式 */
+        .formula-container input[type="number"] {
+           width: calc(100% / 4 - 10px); /* 适应5个输入框在同一行 */
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[class="jia"] {
+            width: calc(100% / 5 - 20px); /* 适应5个输入框在同一行 */
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .sub-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px;
+        }
+        .separator {
+            margin: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+		
+		.form-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        label {
+			width: 60px
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+		
+		 .name-label {
+            font-weight: bold;
+        }
+
+        .cctv-label {
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2 id="currentDate"></h2>
+
+<div id="calculator">
+     <div class="form-item">
+        <label class="name-label" for="name">商品1：</label>
+        <input type="text" id="name" placeholder="请输入您的商品">
+    </div>
+    <div class="row-container row1">
+        <div class="formula-container">
+            (金<input type="number" id="cost1" class="costClass">
+            +
+            工<input type="number" id="cost2" class="costClass">) * 
+			重<input type="number" id="weight1" class="weightClass">
+        </div>
+        <div class="sub-row">
+            
+            代<input type="number" class="jia" id="cost3" >
+            
+            运<input type="number" class="jia"  id="cost4" >
+          
+            盒<input type="number" class="jia"  id="cost5" >
+            
+            证<input type="number" class="jia"  id="cost6" >
+            
+            附<input type="number" class="jia"  id="cost7" >
+        </div>
+		 <div class="separator"></div>
+    </div>
+    <div class="form-item">
+        <label class="name-label" for="name2">商品2：</label>
+        <input type="text" id="name2" placeholder="请输入您的商品">
+    </div>
+    <div class="row-container row2">
+       <div class="formula-container">
+            (金<input type="number" id="cost11" class="costClass">
+            +
+            工<input type="number" id="cost21" class="costClass">) * 
+			重<input type="number" id="weight11" class="weightClass">
+        </div>
+        <div class="sub-row">
+            
+            代<input type="number" class="jia"  id="cost31" >
+            
+            运<input type="number" class="jia"  id="cost41" >
+          
+            盒<input type="number" class="jia"  id="cost51" >
+            
+            证<input type="number" class="jia"  id="cost61" >
+            
+            附<input type="number" class="jia"  id="cost71" >
+        </div>
+		 <div class="separator"></div>
+    </div>
+     <div class="form-item">
+        <label class="name-label" for="name3">商品3：</label>
+        <input type="text" id="name3" placeholder="请输入您的商品">
+    </div>
+    <div class="row-container row3">
+       <div class="formula-container">
+            (金<input type="number" id="cost12" class="costClass">
+            +
+            工<input type="number" id="cost22" class="costClass">) * 
+			重<input type="number" id="weight12" class="weightClass">
+        </div>
+        <div class="sub-row">
+            
+            代<input type="number" class="jia"  id="cost32" >
+            
+            运<input type="number" class="jia"  id="cost42" >
+          
+            盒<input type="number" class="jia"  id="cost52" >
+            
+            证<input type="number" class="jia"  id="cost62" >
+            
+            附<input type="number" class="jia"  id="cost72" >
+        </div>
+		 <div class="separator"></div>
+    </div>
+   <div style="display: flex; justify-content: space-between;">
+        <button onclick="resetInputs()">重置所有输入</button>
+       <button onclick="calculateTotal()">计算总费用</button>
+	</div>   
+
+    <div class="result" id="totalCost">总费用：-</div>
+    <p><label class="cctv-label" id ='nameDetail1'>商品1: </label> ( 金价<span class="price" id='priceDetail10'>0</span>元 + 工费<span class="price" id='priceDetail11'>0</span>元 ) * 重量<span class="weight" id='priceDetail12'>0</span>克 + 代购费<span class="price" id='priceDetail13'>0</span>元 + 运费<span class="price" id='priceDetail14'>0</span>元 + 盒子费<span class="price" id='priceDetail15'>0</span>元 + 证书费<span class="price" id='priceDetail16'>0</span>元 + 附加费<span class="price" id='priceDetail17'>0</span>元 = <span class="total-price" id='priceDetail18'>0</span>元</p>
+
+    
+     <p><label class="cctv-label" id ='nameDetail2'>商品2: </label> ( 金价<span class="price" id='priceDetail20'>0</span>元 + 工费<span class="price" id='priceDetail21'>0</span>元 ) * 重量<span class="weight" id='priceDetail22'>0</span>克 + 代购费<span class="price" id='priceDetail23'>0</span>元 + 运费<span class="price" id='priceDetail24'>0</span>元 + 盒子费<span class="price" id='priceDetail25'>0</span>元 + 证书费<span class="price" id='priceDetail26'>0</span>元 + 附加费<span class="price" id='priceDetail27'>0</span>元 = <span class="total-price" id='priceDetail28'>0</span>元</p>
+
+    
+     <p><label class="cctv-label" id ='nameDetail3'>商品3: </label> ( 金价<span class="price" id='priceDetail30'>0</span>元 + 工费<span class="price" id='priceDetail31'>0</span>元 ) * 重量<span class="weight" id='priceDetail32'>0</span>克 + 代购费<span class="price" id='priceDetail33'>0</span>元 + 运费<span class="price" id='priceDetail34'>0</span>元 + 盒子费<span class="price" id='priceDetail35'>0</span>元 + 证书费<span class="price" id='priceDetail36'>0</span>元 + 附加费<span class="price" id='priceDetail37'>0</span>元 = <span class="total-price" id='priceDetail38'>0</span>元</p>
+</div>
+
+<script>
+
+     function validateInput(inputElement,num) {
+            if (num <= 0) {
+                inputElement.classList.add('error');
+                inputElement.classList.add('cctv-label');
+            } else {
+                inputElement.classList.remove('error');
+                inputElement.classList.remove('cctv-label');
+            }
+    }
+
+    function getDefaultNumberValue(inputId, defaultValue = 0) {
+              const inputElement = document.getElementById(inputId);
+              
+              if (!inputElement) {
+                console.error(`无法找到id为${inputId}的元素`);
+                return;
+              }
+
+              let inputValue = inputElement.value;
+
+              if (isNaN(inputValue) || inputValue === '') {
+                inputValue = defaultValue;
+                console.info("11111")
+              }
+
+              console.info(`xxxd: ${inputValue}`)
+
+              // 如果你想始终返回浮点数，可以添加这行
+              return parseFloat(inputValue);
+    }
+
+    function calculateTotal() {
+        
+        const nm = document.getElementById("name").value;
+        let name = nm.trim();
+        if (name === '') {
+           name = '商品1: ';
+        }else{
+          name = `${name}: `;
+        }
+        const weight1 = getDefaultNumberValue("weight1");    
+        const cost1 = getDefaultNumberValue("cost1");
+        const cost2 = getDefaultNumberValue("cost2");
+        const cost3 = getDefaultNumberValue("cost3");
+        const cost4 = getDefaultNumberValue("cost4");
+        const cost5 = getDefaultNumberValue("cost5");
+        const cost6 = getDefaultNumberValue("cost6");
+        const cost7 = getDefaultNumberValue("cost7");
+		
+        const nm2 = document.getElementById("name2").value;
+        let name2 = nm2.trim();
+        if (name2 === '') {
+           name2 = '商品2: ';
+        }else{
+          name2 = `${name2}: `;
+        }
+		const weight11 = getDefaultNumberValue("weight11");
+        const cost11 = getDefaultNumberValue("cost11");
+        const cost21 = getDefaultNumberValue("cost21");
+        const cost31 = getDefaultNumberValue("cost31");
+        const cost41 = getDefaultNumberValue("cost41");
+        const cost51 = getDefaultNumberValue("cost51");
+        const cost61 = getDefaultNumberValue("cost61");
+        const cost71 = getDefaultNumberValue("cost71");
+		
+        const nm3 = document.getElementById("name3").value;
+        let name3 = nm3.trim();
+        if (name3 === '') {
+           name3 = '商品3: ';
+        }else{
+          name3 = `${name3}: `;
+        }
+		const weight12 = getDefaultNumberValue("weight12");
+        const cost12 = getDefaultNumberValue("cost12");
+        const cost22 = getDefaultNumberValue("cost22");
+        const cost32 = getDefaultNumberValue("cost32");
+        const cost42 = getDefaultNumberValue("cost42");
+        const cost52 = getDefaultNumberValue("cost52");
+        const cost62 = getDefaultNumberValue("cost62");
+        const cost72 = getDefaultNumberValue("cost72");
+
+        // ... 添加第二行和第三行的计算代码 ...
+
+        const row1 = (cost1 + cost2) * weight1 + cost3 + cost4 + cost5 + cost6 + cost7;
+        const row2 = (cost11 + cost21) * weight11 + cost31 + cost41 + cost51 + cost61 + cost71;
+        const row3 = (cost12 + cost22) * weight12 + cost32 + cost42 + cost52 + cost62 + cost72;
+
+        const totalCost = row1 + row2 + row3;
+        document.getElementById("totalCost").textContent = "总费用：" + totalCost.toFixed(2) + " 元";
+        document.getElementById("nameDetail1").textContent = name;
+        document.getElementById("nameDetail2").textContent = name2;
+        document.getElementById("nameDetail3").textContent = name3;
+
+
+       document.getElementById("priceDetail10").textContent = cost1;
+       document.getElementById("priceDetail11").textContent = cost2;
+       document.getElementById("priceDetail12").textContent = weight1;
+       document.getElementById("priceDetail13").textContent = cost3;
+       document.getElementById("priceDetail14").textContent = cost4;
+       document.getElementById("priceDetail15").textContent = cost5;
+       document.getElementById("priceDetail16").textContent = cost6;
+       document.getElementById("priceDetail17").textContent = cost7;
+       document.getElementById("priceDetail18").textContent = row1;
+
+       validateInput(document.getElementById("priceDetail10"),cost1);
+       validateInput(document.getElementById("priceDetail11"),cost2);
+       validateInput(document.getElementById("priceDetail12"),weight1);
+       validateInput(document.getElementById("priceDetail13"),cost3);
+       validateInput(document.getElementById("priceDetail14"),cost4);
+       validateInput(document.getElementById("priceDetail15"),cost5);
+       validateInput(document.getElementById("priceDetail16"),cost6);
+       validateInput(document.getElementById("priceDetail17"),cost7);
+       validateInput(document.getElementById("priceDetail18"),row1);
+
+
+       document.getElementById("priceDetail20").textContent = cost11;
+       document.getElementById("priceDetail21").textContent = cost21;
+       document.getElementById("priceDetail22").textContent = weight11;
+       document.getElementById("priceDetail23").textContent = cost31;
+       document.getElementById("priceDetail24").textContent = cost41;
+       document.getElementById("priceDetail25").textContent = cost51;
+       document.getElementById("priceDetail26").textContent = cost61;
+       document.getElementById("priceDetail27").textContent = cost71;
+       document.getElementById("priceDetail28").textContent = row2;
+
+       validateInput(document.getElementById("priceDetail20"),cost11);
+       validateInput(document.getElementById("priceDetail21"),cost21);
+       validateInput(document.getElementById("priceDetail22"),weight11);
+       validateInput(document.getElementById("priceDetail23"),cost31);
+       validateInput(document.getElementById("priceDetail24"),cost41);
+       validateInput(document.getElementById("priceDetail25"),cost51);
+       validateInput(document.getElementById("priceDetail26"),cost61);
+       validateInput(document.getElementById("priceDetail27"),cost71);
+       validateInput(document.getElementById("priceDetail28"),row2);
+
+       document.getElementById("priceDetail30").textContent = cost12;
+       document.getElementById("priceDetail31").textContent = cost22;
+       document.getElementById("priceDetail32").textContent = weight12;
+       document.getElementById("priceDetail33").textContent = cost32;
+       document.getElementById("priceDetail34").textContent = cost42;
+       document.getElementById("priceDetail35").textContent = cost52;
+       document.getElementById("priceDetail36").textContent = cost62;
+       document.getElementById("priceDetail37").textContent = cost72;
+       document.getElementById("priceDetail38").textContent = row3;
+
+       validateInput(document.getElementById("priceDetail30"),cost12);
+       validateInput(document.getElementById("priceDetail31"),cost22);
+       validateInput(document.getElementById("priceDetail32"),weight12);
+       validateInput(document.getElementById("priceDetail33"),cost32);
+       validateInput(document.getElementById("priceDetail34"),cost42);
+       validateInput(document.getElementById("priceDetail35"),cost52);
+       validateInput(document.getElementById("priceDetail36"),cost62);
+       validateInput(document.getElementById("priceDetail37"),cost72);
+       validateInput(document.getElementById("priceDetail38"),row3);
+
+    }
+	
+	 function showCurrentDate() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var yyyy = today.getFullYear();
+
+            var formattedDate = yyyy + '年' + mm + '月' + dd + '日 费用计算' ;
+
+            document.getElementById("currentDate").textContent = formattedDate;
+        }
+
+        window.onload = function() {
+            showCurrentDate(); // 页面加载时显示当前日期
+        };
+		
+		 function resetInputs() {
+            document.getElementById("name").value = "";
+            document.getElementById("cost1").value = "";
+            document.getElementById("cost2").value = "";
+            document.getElementById("weight1").value = "";
+            document.getElementById("cost3").value = "";
+            document.getElementById("cost4").value = "";
+            document.getElementById("cost5").value = "";
+            document.getElementById("cost6").value = "";
+            document.getElementById("cost7").value = "";
+
+            document.getElementById("name2").value = "";
+            document.getElementById("cost11").value = "";
+            document.getElementById("cost21").value = "";
+            document.getElementById("weight11").value = "";
+            document.getElementById("cost31").value = "";
+            document.getElementById("cost41").value = "";
+            document.getElementById("cost51").value = "";
+            document.getElementById("cost61").value = "";
+            document.getElementById("cost71").value = "";
+			
+            document.getElementById("name3").value = "";
+            document.getElementById("cost12").value = "";
+            document.getElementById("cost22").value = "";
+            document.getElementById("weight12").value = "";
+            document.getElementById("cost32").value = "";
+            document.getElementById("cost42").value = "";
+            document.getElementById("cost52").value = "";
+            document.getElementById("cost62").value = "";
+            document.getElementById("cost72").value = "";		
+
+            document.getElementById("totalCost").textContent = "总费用：请重新计算";   	
+           
+        }
+
+
+</script>
+
+</body>
+</html>
